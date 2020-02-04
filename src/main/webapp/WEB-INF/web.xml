@@ -1,0 +1,50 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+
+<web-app>
+
+	<servlet>
+		<servlet-name>PersonServlet</servlet-name>
+		<servlet-class>PersonServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>lightchangeServlet</servlet-name>
+		<servlet-class>lightchangeServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>EmergencyDriverServlet</servlet-name>
+		<servlet-class>EmergencyDriverServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SignupServlet</servlet-name>
+		<servlet-class>SignupServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>IntermediateServlet</servlet-name>
+		<servlet-class>IntermediateServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>PersonServlet</servlet-name>
+		<url-pattern>/people/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>lightchangeServlet</servlet-name>
+		<url-pattern>/people/lightchangeServlet/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>EmergencyDriverServlet</servlet-name>
+		<url-pattern>/people/EmergencyDriverServlet/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SignupServlet</servlet-name>
+		<url-pattern>/people/SignupServlet/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>IntermediateServlet</servlet-name>
+		<url-pattern>/people/IntermediateServlet/*</url-pattern>
+	</servlet-mapping>
+	
+</web-app>
