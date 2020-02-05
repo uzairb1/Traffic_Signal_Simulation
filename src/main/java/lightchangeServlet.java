@@ -19,7 +19,7 @@ public class lightchangeServlet extends HttpServlet {
   
 	 
 	
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException 
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException 
     {
 
         resp.setHeader("Refresh", "5");
@@ -48,71 +48,50 @@ public class lightchangeServlet extends HttpServlet {
 	    
         String uname=p.getName();
         String pwd=p.getPassword(); 
-        if(p!=null) //check if credentials were not null
-        {
-
-    		role = p.getRole();
-    		System.out.println(role);
-			        if((role.equalsIgnoreCase("Admin") || role.equalsIgnoreCase("LightChanger")))  //check permissions
-			        {
-			        	
-
+        role = p.getRole();
+		System.out.println(role);
+		        if((role.equalsIgnoreCase("Admin") || role.equalsIgnoreCase("LightChanger")))  //check permissions
+		        {
 		        	
-				        	if(uname.equals(param1) && pwd.equals(param2))   //check credentials
-				        	{
-				        	trafficlight(req,resp,out);
-				        	}
+
+		    	
+			        	if(uname.equals(param1) && pwd.equals(param2))   //check credentials
+			        	{
+			        	trafficlight(req,resp,out);
+			        	}
+			        	
+			        	
+			        	else   //check credentials else condition
+			        	{
+			        		out.write("<body>" + 
+									"        <center>\r\n" + 
+									"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
+									"                <p>Wrong Credentials</p>\r\n" + 
+									"                <div id=\"loginBtn\">\r\n" + 
+									"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
+									"                </div>\r\n" + 
+									"            </form>\r\n" + 
+									"        </center>\r\n" + 
+									"    </body>	");	
+			        	}
 				        	
 				        	
-				        	else   //check credentials else condition
-				        	{
-				        		out.write("<body>" + 
-										"        <center>\r\n" + 
-										"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-										"                <p>Wrong Credentials</p>\r\n" + 
-										"                <div id=\"loginBtn\">\r\n" + 
-										"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
-										"                </div>\r\n" + 
-										"            </form>\r\n" + 
-										"        </center>\r\n" + 
-										"    </body>	");	
-				        	}
-					        	
-					        	
-			        }
-			        
-			        
-			        else  //check permissions else condition
-			        {
-			        	out.write("<body>" + 
-								"        <center>\r\n" + 
-								"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-								"                <p>No Permission</p>\r\n" + 
-								"                <div id=\"loginBtn\">\r\n" + 
-								"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
-								"                </div>\r\n" + 
-								"            </form>\r\n" + 
-								"        </center>\r\n" + 
-								"    </body>	");		
-					}
-			        
-			        
-		}
-        
-        
-        else//check if credentials were not null else condition
-        {
-        	out.write("<body>" + 
-					"        <center>\r\n" + 
-					"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-					"                <p>Credentials Missing</p>\r\n" + 
-					"                <div id=\"loginBtn\">\r\n" + 
-					"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
-					"                </div>\r\n" + 
-					"            </form>\r\n" + 
-					"        </center>\r\n" + 
-					"    </body>	");		
-        }
+		        }
+		        
+		        
+		        else  //check permissions else condition
+		        {
+		        	out.write("<body>" + 
+							"        <center>\r\n" + 
+							"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
+							"                <p>No Permission</p>\r\n" + 
+							"                <div id=\"loginBtn\">\r\n" + 
+							"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
+							"                </div>\r\n" + 
+							"            </form>\r\n" + 
+							"        </center>\r\n" + 
+							"    </body>	");		
+				}
         out.close();
         
     }
@@ -125,7 +104,7 @@ public class lightchangeServlet extends HttpServlet {
 		else
 		changeRedtoGreen(req,resp,out);	
     }
-    public void dopost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException, InterruptedException {
+    protected void dopost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException, InterruptedException {
         handleRequest(req, resp);
     }
 	public static Boolean isconflicted()
