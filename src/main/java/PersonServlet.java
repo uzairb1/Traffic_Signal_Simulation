@@ -19,55 +19,28 @@ public class PersonServlet extends HttpServlet {
 	String fname="";
 		
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("text/html");
 		PrintWriter out=response.getWriter();
+		
+		
+		
+		////start checks
+		//check if not null
 		uname=(String) request.getParameter("addname");
 		pass=(String) request.getParameter("addpass");
 		role=(String) request.getParameter("addrole");
 		fname=(String) request.getParameter("FName");
-		request.getSession().setAttribute("Emergency","false");
-		
-		
-		////start checks
 		if(uname!=null && pass!=null && role!=null)
 		{
-			out.write("<body>" + 
-					"        <center>\r\n" + 
-					"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-					"                <p>Person Added</p>\r\n" + 
-					"                <div id=\"loginBtn\">\r\n" + 
-					"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
-					"                </div>\r\n" + 
-					"            </form>\r\n" + 
-					"        </center>\r\n" + 
-					"    </body>	");		
-			parseparams(out);
-			Person p=new Person(uname,pass,fname,role);
-			Boolean flag=DataStore.getInstance().putPerson(p);
-			if(!flag)
-			{
-				out.write("<body>" + 
-						"        <center>\r\n" + 
-						"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-						"                <p>Person not Added</p>\r\n" + 
-						"                <div id=\"loginBtn\">\r\n" + 
-						"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
-						"                </div>\r\n" + 
-						"            </form>\r\n" + 
-						"        </center>\r\n" + 
-						"    </body>	");		
-				
-			}
-			
+			doPost(request, response);
 		}
 		
-		else if(uname==null)
+		else
 		{
+		
 				out.write("<body>\r\n" + 
 						"        <center>\r\n" + 
-						"            <h2>Servlet Send Redirect Example</h2>\r\n" + 
 						"            <form id=\"IntermediateServlet\" name=\"IntermediateServlet\" method=\"Get\" action=\"IntermediateServlet\">\r\n" + 
 						"                <div id=\"usernameDiv\" class=\"paddingBtm\">\r\n" + 
 						"                    <span id=\"user\">Username: </span><input id=\"userInput\" type=\"text\" name=\"username\" />\r\n" + 
@@ -81,59 +54,134 @@ public class PersonServlet extends HttpServlet {
 						"            </form>\r\n" + 
 						"        </center>\r\n" + 
 						"    </body>	");		
-		}
-		else parseparams(out);
-
 		
+		}
+		out.close();
 	}
 	
 	
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
+	{
+		response.setContentType("text/html");
+		PrintWriter out=response.getWriter();
+		uname=(String) request.getParameter("addname");
+		pass=(String) request.getParameter("addpass");
+		role=(String) request.getParameter("addrole");
+		fname=(String) request.getParameter("FName");
+		request.getSession().setAttribute("Emergency","false");
+		
+		
+			//check if formats are correct
+			if(checkParams(uname, pass, role) )
+			{
+				
+				parseparams(out);
+				Person p=new Person(uname,pass,role,fname);
+				String empRole=(String) request.getSession().getAttribute("role");
+				
+				if(isPermitted(empRole, role))
+				{
+					if(DataStore.getInstance().putPerson(p))
+					{
+						PrintWriter out1=response.getWriter();
+						output1("Person Added", out1);	
+						System.out.println("Person Added");
+					}
+					else
+					{
+						PrintWriter out1=response.getWriter();
+						output("Person not added as Person might already exists or Some data is missing", out1);	
+					}
+				}
+				else
+				{
+					output1("Employee cannot add Admin or LightChanger ", out);	
+				}
+			}
+			else
+			{
+					output("Invalid data, role not valid or required fields are null", out);	
+				
+			}
+		
 	}
 	
-	public void parseparams(PrintWriter out)
+	
+	public Boolean parseparams(PrintWriter out)
 	{
 		if(role==null)
 		{
-			out.write("<body>" + 
-					"        <center>\r\n" + 
-					"            <form id=\"SignupServlet\" name=\"SignupServlet\" method=\"Get\" action=\"SignupServlet\">\r\n" + 
-					"                <p>role cannot be null</p>\r\n" + 
-					"                <div id=\"loginBtn\">\r\n" + 
-					"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
-					"                </div>\r\n" + 
-					"            </form>\r\n" + 
-					"        </center>\r\n" + 
-					"    </body>	");		
+				return false;
 		}
 		else if(pass==null)
 		{
-			out.write("<body>" + 
-					"        <center>\r\n" + 
-					"            <form id=\"SignupServlet\" name=\"SignupServlet\" method=\"Get\" action=\"SignupServlet\">\r\n" + 
-					"                <p>password cannot be null</p>\r\n" + 
-					"                <div id=\"loginBtn\">\r\n" + 
-					"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
-					"                </div>\r\n" + 
-					"            </form>\r\n" + 
-					"        </center>\r\n" + 
-					"    </body>	");	
+				return false;
 		}
 		else if(uname==null)
+		{	
+				return false;
+		}
+		return true;
+		}
+	
+	
+	public Boolean checkParams(String uname, String pwd, String role)
+	{
+		
+		if(role.equalsIgnoreCase("Admin")|| role.equalsIgnoreCase("LightChanger") ||role.equalsIgnoreCase("Employee") )
 		{
-			out.write("<body>" + 
-					"        <center>\r\n" + 
-					"            <form id=\"SignupServlet\" name=\"SignupServlet\" method=\"Get\" action=\"SignupServlet\">\r\n" + 
-					"                <p>Username cannot be null</p>\r\n" + 
-					"                <div id=\"loginBtn\">\r\n" + 
-					"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
-					"                </div>\r\n" + 
-					"            </form>\r\n" + 
-					"        </center>\r\n" + 
-					"    </body>	");	
-			}
-		out.close();
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
+	
+	
+	public Boolean isPermitted(String role1, String role2)
+	{
+		Boolean flag=true;
+		System.out.println(role1 + " is adding " + role2);
+		if(role1.equalsIgnoreCase("Employee"))
+		{
+			if(!role2.equalsIgnoreCase("Employee"))
+				return false;
+			
+		}
+		return flag;
+	}
+	
+	
+	public void output(String msg, PrintWriter out)
+	{
+		out.write("<body>" + 
+				"        <center>\r\n" + 
+				"            <form id=\"SignupServlet\" name=\"SignupServlet\" method=\"Get\" action=\"SignupServlet\">\r\n" + 
+				"                <p>"+msg+"</p>\r\n" + 
+				"                <div id=\"loginBtn\">\r\n" + 
+				"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
+				"                </div>\r\n" + 
+				"            </form>\r\n" + 
+				"        </center>\r\n" + 
+				"    </body>	");	
+	}
+	
+	
+	public void output1(String msg, PrintWriter out)
+	{
+		out.write("<body>" + 
+				"        <center>\r\n" + 
+				"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
+				"                <p>"+msg+"</p>\r\n" + 
+				"                <div id=\"loginBtn\">\r\n" + 
+				"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
+				"                </div>\r\n" + 
+				"            </form>\r\n" + 
+				"        </center>\r\n" + 
+				"    </body>	");	
+		}
+}
+	
