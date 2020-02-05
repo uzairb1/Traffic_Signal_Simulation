@@ -1,12 +1,9 @@
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class DuplicateTest {
 
 	@Test
 	public Boolean Duptest() {
-		Boolean flag=false;
 		DataStore ds=DataStore.getInstance();
 		String username="Noorullah";
 		String password="Noor786*";
