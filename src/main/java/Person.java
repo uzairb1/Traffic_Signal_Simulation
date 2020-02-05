@@ -1,13 +1,11 @@
 public class Person {
 	private String userid;
 	private String Password;
-	private String First_Name;
 	private String Role;
 	
-	public Person(String Username, String password, String Role, String Fname) {
-		this.userid = Username;
+	public Person(String bs, String password, String Role, String Fname) {
+		this.userid = bs;
 		this.Password = password;
-		this.First_Name=Fname;
 		this.Role=Role;
 
 	}
