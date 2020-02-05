@@ -65,7 +65,7 @@ public class EmergencyDriverServlet extends HttpServlet {
 	
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 	}
 	public void emergency(String signalname,HttpServletRequest req, HttpServletResponse resp, PrintWriter out) throws InterruptedException, IOException, ServletException
 	{
