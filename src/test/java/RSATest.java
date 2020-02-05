@@ -1,13 +1,9 @@
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
-import org.junit.Test;
 
 import junit.framework.TestCase;
 
@@ -17,7 +13,6 @@ public class RSATest extends TestCase {
 	    
 	public static String PublicKeyTest(String testString) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException
 	{
-		RSAKeyPairGenerator rsa=new RSAKeyPairGenerator();
 		byte[] encrypted=RSAKeyPairGenerator.encrypt(testString, publicKey);
 		Key privy=RSAKeyPairGenerator.getPrivateKey(privateKey);
 		String decrypted=RSAKeyPairGenerator.decrypt(encrypted, privy);
