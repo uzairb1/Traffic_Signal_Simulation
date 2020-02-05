@@ -15,7 +15,7 @@ public class IntermediateServlet extends HttpServlet {
     String param1,param2;
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
 		response.setContentType("text/html");
 		PrintWriter out=response.getWriter();
@@ -49,7 +49,7 @@ public class IntermediateServlet extends HttpServlet {
 	
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
 	{
 	}
 	
@@ -58,14 +58,15 @@ public class IntermediateServlet extends HttpServlet {
 	{
 		Boolean flag=false;
 		response.setContentType("text/html");
-		response.setHeader("Refresh", "5");
 
         PrintWriter out = response.getWriter();
         
        
         String role="";
         p=DataStore.getInstance().getPerson(param1);
-	    
+        try
+        {
+	    request.getSession().setAttribute("role", p.getRole());
         if(p!=null)  
 		{
 
@@ -78,35 +79,20 @@ public class IntermediateServlet extends HttpServlet {
 		    	
 		    	else   //check credentials else condition
 		    	{
-		    		out.write("<body>" + 
-							"        <center>\r\n" + 
-							"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-							"                <p>Wrong Credentials</p>\r\n" + 
-							"                <div id=\"loginBtn\">\r\n" + 
-							"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
-							"                </div>\r\n" + 
-							"            </form>\r\n" + 
-							"        </center>\r\n" + 
-							"    </body>	");	
+		    		output1("Wrong Credentials",out);
 		    	}
 		        	
 		        	
 		}
-		
-		
-		else  //check permissions else condition
+        else  //check permissions else condition
 		{
-			out.write("<body>" + 
-					"        <center>\r\n" + 
-					"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
-					"                <p>Wrong or no Credentials</p>\r\n" + 
-					"                <div id=\"loginBtn\">\r\n" + 
-					"                    <input id=\"btn\" type=\"submit\" value=\"Go to Login Page\" />\r\n" + 
-					"                </div>\r\n" + 
-					"            </form>\r\n" + 
-					"        </center>\r\n" + 
-					"    </body>	");		
+        	output1("Wrong or No Credentials",out);
 		}
+        }
+		catch(Exception e)
+        {
+			output1("Wrong or No Credentials",out);
+        }
         
         out.close();
         return flag;
@@ -114,11 +100,10 @@ public class IntermediateServlet extends HttpServlet {
 	public Boolean CredentialCheck(String uname,String pwd) throws IOException
 	{
 		Boolean flag=false;
-		DataStore ds=DataStore.getInstance();
+		DataStore.getInstance();
         Person testPerson=DataStore.getInstance().getPerson(uname);
         if(testPerson!=null)  
 		{
-
             String param1=testPerson.getName();
             String param2=testPerson.getPassword();
 		    	if(uname.equals(param1) && pwd.equals(param2))   //check credentials
@@ -132,4 +117,17 @@ public class IntermediateServlet extends HttpServlet {
 		
         return flag;
 	}
+	public void output1(String msg, PrintWriter out)
+	{
+		out.write("<body>" + 
+				"        <center>\r\n" + 
+				"            <form id=\"PersonServlet\" name=\"PersonServlet\" method=\"Get\" action=\"PersonServlet\">\r\n" + 
+				"                <p>"+msg+"</p>\r\n" + 
+				"                <div id=\"loginBtn\">\r\n" + 
+				"                    <input id=\"btn\" type=\"submit\" value=\"Go Back\" />\r\n" + 
+				"                </div>\r\n" + 
+				"            </form>\r\n" + 
+				"        </center>\r\n" + 
+				"    </body>	");	
+		}
 	}
