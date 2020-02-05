@@ -40,6 +40,11 @@ public class test {
 		//UnAuthorizedCheckTest
 		testFlag = at.checkCredentialsTest("UzairTest", "Uzair786*");
 		assertFalse(testFlag);
+		
+		//Employee adds admin test
+		SignupPermissionTest spt=new SignupPermissionTest();
+		testFlag=spt.SignupTest();
+		assertFalse(testFlag);
 	}
 
 }
